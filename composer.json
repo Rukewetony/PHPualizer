@@ -1,0 +1,13 @@
+{
+    "name": "wargog/phpualizer",
+    "description": "A PHP control panel for managing VirtualBox VMs in a multi-server environment",
+    "type": "application",
+    "license": "Apache-2.0",
+    "authors": [
+        {
+            "name": "Joshua Stroup",
+            "email": "josh@joshstroup.xyz"
+        }
+    ],
+    "require": {}
+}
