@@ -9,5 +9,8 @@
             "email": "josh@joshstroup.xyz"
         }
     ],
-    "require": {}
+    "require": {
+        "danielmewes/php-rql": "^2.2",
+        "slim/slim": "^3.3"
+    }
 }
