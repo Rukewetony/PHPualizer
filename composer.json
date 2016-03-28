@@ -3,6 +3,13 @@
     "description": "A PHP control panel for managing VirtualBox VMs in a multi-server environment",
     "type": "application",
     "license": "Apache-2.0",
+	"autoload": {
+		"psr-4": {
+			"PHPualizer\\": "src/",
+            "PHPualizer\\Database\\": "src/database/",
+            "PHPualizer\\Routes\\": "src/routes/"
+		}
+	},
     "authors": [
         {
             "name": "Joshua Stroup",
