@@ -9,10 +9,16 @@ class Root
 {
     public static function GET(Request $req, Response $res)
     {
-        $res->getBody()->write(json_encode([
-            'title' => \PHPualizer\Config::getConfigData()['title'],
-            'version' => \PHPualizer\Config::getVersion()
-        ]));
+        $db = new \PHPualizer\Database\Driver;
+        $db = $db->getDriver();
+        $db->setTable('users_test');
+
+        $res->getBody()->write($db->updateDocuments(['username' => 'test', 'password' => 'tester'], ['username' => 'wargog']));
+
+//        $res->getBody()->write(json_encode([
+//            'title' => \PHPualizer\Config::getConfigData()['title'],
+//            'version' => \PHPualizer\Config::getVersion()
+//        ]));
 
         return $res;
     }

@@ -9,7 +9,8 @@ use PHPualizer\Config;
 
 class SQL
 {
-    private $m_PDO, $m_Table;
+    private $m_PDO;
+    private $m_Table;
 
     public function getTable(): string
     {
@@ -37,7 +38,6 @@ class SQL
 
     public function getDocuments(array $filter): array
     {
-        $query = null;
         $q_length = count($filter);
         $index = 0;
         $qs = 'SELECT * FROM ' . $this->m_Table . ' WHERE ';
@@ -62,11 +62,83 @@ class SQL
         return (array)$query->fetchObject();
     }
 
-    public function insertDocuments(array $documents): array
+    public function insertDocuments(array $documents): bool
     {
+        $s_length = count($documents);
+        $index = 0;
+        $qs = "INSERT INTO $this->m_Table (";
+        
+        foreach($documents as $key => $val) {
+            if($index < $s_length && $index > 0)
+                $qs .= ', ';
+            
+            $qs .= $key;
+            
+            $index++;
+        }
+        
+        $index = 0;
+        $qs .= ') VALUES(';
+        
+        foreach($documents as $key => $val) {
+            if($index < $s_length && $index > 0)
+                $qs .= ', ';
 
+            $qs .= ":$key";
+
+            $index++;
+        }
+
+        $query = $this->m_PDO->prepare($qs . ')');
+
+        foreach($documents as $key => $val) {
+            $query->bindValue(":$key", $val);
+        }
+
+        return $query->execute();
     }
-    
+
+    public function updateDocuments(array $documents, array $filter): bool
+    {
+        $f_length = count($filter);
+        $d_length = count($documents);
+        $index = 0;
+        $qs = 'UPDATE ' . $this->m_Table . ' SET ';
+
+        foreach($documents as $key => $val) {
+            if($index < $d_length && $index > 0)
+                $qs .= ', ';
+
+            $qs .= $key . '=:' . $key;
+
+            $index++;
+        }
+
+        $index = 0;
+        $qs .= ' WHERE ';
+
+        foreach($filter as $key => $val) {
+            if($index < $f_length && $index > 0)
+                $qs .= ' AND ';
+
+            $qs .= $key . '=:' . $key . 'filter';
+
+            $index++;
+        }
+
+        $query = $this->m_PDO->prepare($qs);
+
+        foreach($documents as $key => $val) {
+            $query->bindValue(":$key", $val);
+        }
+
+        foreach($filter as $key => $val) {
+            $query->bindValue(':' . $key . 'filter', $val);
+        }
+
+        return $query->execute();
+    }
+
     public function __destruct()
     {
         unset($this->m_PDO);
